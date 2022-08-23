@@ -1,12 +1,17 @@
 import cv2
 import numpy as np
 import utils
+import pytesseract
+import os
+pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
 questions=10
 choices =5
 img = cv2.imread("Sheet1.jpg")
 height,width=700,700
 ans = [1,2,0,1,4,1,2,0,1,4]
+
+
 
 img=cv2.resize(img,(height,width))
 imgContours=img.copy()
@@ -42,7 +47,13 @@ if biggestContour.size != 0 and NamePoints.size != 0:
     pt02 = np.float32([[0,0],[450,0],[0,50],[450,50]])
     matrix0 = cv2.getPerspectiveTransform(pt01,pt02)
     imgNameDisplay = cv2.warpPerspective(img,matrix0,(450,50))
+    imgNameDisplay = cv2.resize(imgNameDisplay,(2250,250))
     cv2.imshow("Name",imgNameDisplay)
+
+    orb = cv2.ORB_create()
+    kp1, des1 = orb.detectAndCompute(imgNameDisplay, None)
+    impKp1 = cv2.drawKeypoints(imgNameDisplay,kp1,None)
+    cv2.imshow("KeyPoints Image",impKp1)
 
     pt11 = np.float32(RollNumberPoints)
     pt12 = np.float32([[0,0],[300,0],[0,50],[300,50]])
