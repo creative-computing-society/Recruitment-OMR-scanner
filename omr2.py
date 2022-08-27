@@ -3,13 +3,18 @@ import cv2
 import numpy as np
 import utils
 import os
+import csv
 
-questions=10
-choices =5
+questions=20
+choices =4
 img = cv2.imread("Sheet2.jpg")
 height,width=720,720
-ans = [1,2,0,1,4,1,2,0,1,4]
+ans = [1,2,0,1,4,1,2,0,1,4,1,2,0,1,4,1,2,0,1,4]
+AllRollNumbers=[]
 
+with open('results.csv', 'w') as f:
+    writer = csv.writer(f)
+    writer.writerow(["Roll Number", "Marks"])
 
 img=cv2.resize(img,(height,width))
 imgContours=img.copy()
@@ -69,7 +74,7 @@ if biggestContour.size != 0 and RollNumberPoints.size != 0:
         myIndexVal = np.where(array ==np.amax(array))
         #print(myIndexVal[0])
         myIndex.append(myIndexVal[0][0])
-    print(myIndex)
+    #print(myIndex)
 
     grading=[]
     for x in range(0,questions):
@@ -77,9 +82,9 @@ if biggestContour.size != 0 and RollNumberPoints.size != 0:
             grading.append(1)
         else:
             grading.append(0)
-    print(grading)
+    #print(grading)
     score = sum(grading)
-    print(score)
+    #print(score)
     ''' idher excel ka '''
 
     #RollNumberDisplay = cv2.resize(imgWarpColored1, (1000, 1000))
@@ -107,7 +112,17 @@ if biggestContour.size != 0 and RollNumberPoints.size != 0:
         myIndexVal1 = np.where(array1==np.amax(array1))
         #print(myIndexVal[0])
         myIndex1.append(myIndexVal1[0][0])
-    print(myIndex1)
+    myData+= [(''.join((str(i) for i in myIndex1)))]
+
+    myData+=(str(score))
+    if (''.join(str(i) for i in myIndex1)) in AllRollNumbers:
+        pass
+    else:
+        with open('results.csv', 'a') as f:
+            writer = csv.writer(f)
+            writer.writerow(myData)
+        AllRollNumbers += (''.join(str(i) for i in myIndex1))
+        myData=[]
 '''data = []
 with open('results.csv', 'a') as f:
     writer = csv.writer(f)

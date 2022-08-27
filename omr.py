@@ -11,7 +11,8 @@ img = cv2.imread("Sheet1.jpg")
 height,width=700,700
 ans = [1,2,0,1,4,1,2,0,1,4]
 
-
+per = 25
+AllData=[]
 
 img=cv2.resize(img,(height,width))
 imgContours=img.copy()
@@ -29,7 +30,13 @@ biggestContour = utils.getCornerPoints(rectCon[0])
 NamePoints = utils.getCornerPoints(rectCon[1])
 RollNumberPoints = utils.getCornerPoints(rectCon[2])
 
+imgC = cv2.imread("onetoten.jpg")
+orb = cv2.ORB_create(1000)
+
+kp2, des2 = orb.detectAndCompute(imgC, None)
+
 if biggestContour.size != 0 and NamePoints.size != 0:
+    myData=[]
     cv2.drawContours(imgBiggestContours,biggestContour,-1,(0,255,0),20)
     cv2.drawContours(imgBiggestContours,NamePoints,-1,(255,0,0),20)
     cv2.drawContours(imgBiggestContours,RollNumberPoints, -1, (0, 0,255), 20)
@@ -50,23 +57,54 @@ if biggestContour.size != 0 and NamePoints.size != 0:
     imgNameDisplay = cv2.resize(imgNameDisplay,(2250,250))
     cv2.imshow("Name",imgNameDisplay)
 
-    orb = cv2.ORB_create()
+
+
+
+    '''orb = cv2.ORB_create(1000)
     kp1, des1 = orb.detectAndCompute(imgNameDisplay, None)
     impKp1 = cv2.drawKeypoints(imgNameDisplay,kp1,None)
     cv2.imshow("KeyPoints Image",impKp1)
+    #print(pytesseract.image_to_string(impKp1))'''
 
     pt11 = np.float32(RollNumberPoints)
     pt12 = np.float32([[0,0],[300,0],[0,50],[300,50]])
     matrix1 = cv2.getPerspectiveTransform(pt11,pt12)
     RollNumberDisplay= cv2.warpPerspective(img,matrix1,(300,50))
+    RollNumberDisplay= cv2.resize(RollNumberDisplay,(2000,350))
     cv2.imshow("Roll Number",RollNumberDisplay)
+
+
+
+
+    kp1, des1 = orb.detectAndCompute(RollNumberDisplay, None)
+
+
+    '''bf = cv2.BFMatcher(cv2.NORM_HAMMING)
+    matches = bf.match(des2,des1)
+    matches = list(matches)
+    matches.sort(key= lambda x: x.distance)
+    good = matches[:int(len(matches)*(per/100))]
+    imgMatch = cv2.drawMatches(RollNumberDisplay,kp2,imgC,kp1,good[:100],None,flags=2)
+    #cv2.imshow(y,imgMatch)
+
+    srcPoints = np.float32([kp2[m.queryIdx].pt for m in good]).reshape(-1,1,2)
+    dstPoints = np.float32([kp2[m.queryIdx].pt for m in good]).reshape(-1,1,2)
+
+    M,_ = cv2.findHomography(srcPoints,dstPoints,cv2.RANSAC,5.0)
+    h, w, c = img.shape
+    imgScan = cv2.warpPerspective(RollNumberDisplay,M,(w,h))'''
+    impKp1 = cv2.drawKeypoints(RollNumberDisplay,kp1,None)
+    cv2.imshow("KeyPoints Image",impKp1)
+    print(pytesseract.image_to_string(impKp1,config='--psm 6'))
+
+
+
 
     imgWarpGray = cv2.cvtColor(imgWarpColored,cv2.COLOR_BGR2GRAY)
     imgThresh = cv2.threshold(imgWarpGray,150,255,cv2.THRESH_BINARY_INV)[1]
 
     boxes = utils.splitBoxes(imgThresh)
     #cv2.imshow("Test",boxes[2])
-
 
     myPixelVal = np.zeros((questions,choices))
     countC = 0
@@ -78,7 +116,8 @@ if biggestContour.size != 0 and NamePoints.size != 0:
         if(countC == choices):
             countR+=1
             countC=0
-    #print(myPixelVal)
+    print("myPixelVal")
+    print(myPixelVal)
 
     myIndex = []
     for x in range(0,questions):
@@ -87,6 +126,7 @@ if biggestContour.size != 0 and NamePoints.size != 0:
         myIndexVal = np.where(array ==np.amax(array))
         #print(myIndexVal[0])
         myIndex.append(myIndexVal[0][0])
+    print("myIndex")
     print(myIndex)
 
     grading=[]
