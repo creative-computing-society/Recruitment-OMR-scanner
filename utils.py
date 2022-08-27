@@ -83,3 +83,14 @@ def splitBoxes(img):
             #cv2.imshow("Split",box) total boxes
 
     return boxes
+
+def splitBoxes1(img):
+    rows1 = np.hsplit(img,9)
+    boxes1=[]
+    for r in rows1:
+        cols1 = np.vsplit(r,10)
+        for box in cols1:
+            boxes1.append(box)
+            #cv2.imshow("Split",box) total boxes
+
+    return boxes1
