@@ -40,7 +40,6 @@ def stackImages(imgArray,scale,lables=[]):
 def rectCountour(coutors):
     rectCon=[]
     for i in coutors:
-        print(type(i))
         area=cv2.contourArea(i)
         #print("Area",area)
         if area>50:
