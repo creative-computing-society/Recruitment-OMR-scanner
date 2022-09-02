@@ -73,10 +73,10 @@ def reorder(myPoints):
     return myPointsNew
 
 def splitBoxes(img):
-    rows = np.vsplit(img,10)
+    rows = np.vsplit(img,20)
     boxes=[]
     for r in rows:
-        cols = np.hsplit(r,5)
+        cols = np.hsplit(r,4)
         for box in cols:
             boxes.append(box)
             #cv2.imshow("Split",box) total boxes
