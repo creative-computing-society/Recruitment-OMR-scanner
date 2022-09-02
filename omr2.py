@@ -32,6 +32,8 @@ for i in range(count):
     imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     imgBlur = cv2.GaussianBlur(imgGray, (5, 5), 1)
     imgCanny = cv2.Canny(imgBlur, 10, 50)
+
+
     countours, hierarchy = cv2.findContours(imgCanny, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
     cv2.drawContours(imgContours, countours, -1, (0, 255, 0), 10)
     rectCon = utils.rectCountour(countours)
@@ -42,7 +44,6 @@ for i in range(count):
         myData=[]
         cv2.drawContours(Markings,biggestContour,-1,(0,255,0),20)
         cv2.drawContours(Markings,RollNumberPoints, -1, (0, 0,255), 20)
-
         biggestContour=utils.reorder(biggestContour)
         RollNumberPoints=utils.reorder(RollNumberPoints)
 
@@ -55,6 +56,8 @@ for i in range(count):
         pt12 = np.float32([[0,0],[width,0],[0,width],[height,width]])
         matrix1 = cv2.getPerspectiveTransform(pt11,pt12)
         imgWarpColored1= cv2.warpPerspective(img,matrix1,(height,width))
+
+
 
         imgWarpGray = cv2.cvtColor(imgWarpColored,cv2.COLOR_BGR2GRAY)
         imgThresh = cv2.threshold(imgWarpGray,150,255,cv2.THRESH_BINARY_INV)[1]
@@ -81,21 +84,17 @@ for i in range(count):
             myIndex.append(myIndexVal[0][0])
         #print(myIndex)
 
-        grading=[]
+        score=0
         for x in range(0,questions):
             if ans[x] == myIndex[x]:
-                grading.append(1)
+                score+=1
             else:
-                grading.append(0)
+                pass
         #print(grading)
-        score = sum(grading)
-        #print(score)
 
-        #RollNumberDisplay = cv2.resize(imgWarpColored1, (1000, 1000))
+
         imgWarpGray1 = cv2.cvtColor(imgWarpColored1,cv2.COLOR_BGR2GRAY)
         imgThresh1 = cv2.threshold(imgWarpGray1,150,255,cv2.THRESH_BINARY_INV)[1]
-
-        cv2.imshow("Pic",imgThresh1)
 
         boxes1 = utils.splitBoxes1(imgThresh1)
         myPixelVal1 = np.zeros((9,10))
