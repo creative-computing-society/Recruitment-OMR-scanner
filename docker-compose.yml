@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  omrscannerapi:
+    image: ccs/omr-scanner-api
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "6376:6376"
+    volumes:
+      - ./database/:/app/database/
+    restart: always
