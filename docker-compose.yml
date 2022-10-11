@@ -10,4 +10,6 @@ services:
       - "6376:6376"
     volumes:
       - ./database/:/app/database/
+      - ./static/:/app/static/
+      - ./media/:/app/media/
     restart: always
