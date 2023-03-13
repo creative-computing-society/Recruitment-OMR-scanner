@@ -36,3 +36,10 @@ Returns the status:
 | `status`      | `error` |Error occured |
 | `error`      | {error} |Only if status is `error`. Error Description(String)|
 | `error_type`      | {error type} |Only if status is `error`. Error Type(String) |
+
+
+#### For testing and demonstration purposes
+```http
+  GET /api/test
+```
+No authentication required
