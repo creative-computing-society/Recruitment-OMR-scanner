@@ -4,6 +4,9 @@ from rest_framework import status
 
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.renderers import MultiPartRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer
+
+from django.shortcuts import render
 
 from .serializers import RecordSerializer
 from .models import Record
@@ -14,8 +17,7 @@ from .omr_scanner.omr2 import analyseSheet
 
 class OMRScannerAPIView(APIView):
 
-    authentication_classes = [TokenAuthentication,]
-    permission_classes = [IsAuthenticated, ]
+    # permission_classes = [IsAuthenticated, ]
 
     parser_classes = [MultiPartParser, FormParser]
     
@@ -43,7 +45,7 @@ class OMRScannerAPIView(APIView):
                 if record.roll_no==None or record.score==None:
                     return Response({'status': 'failed'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
                 
-                return Response({'status': 'success'}, status=status.HTTP_200_OK)
+                return Response({'status': 'success', 'roll_no': record.roll_no, 'score': record.score}, status=status.HTTP_200_OK)
             
             except BaseException as err:
                 
@@ -59,3 +61,6 @@ class OMRScannerAPIView(APIView):
         response['status'] = 'error'
         
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+def index(request):
+    return render(request, 'form.html')
