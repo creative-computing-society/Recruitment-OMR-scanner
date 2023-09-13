@@ -27,7 +27,7 @@ SECRET_KEY = config('SECURITY_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool, default=False)
 
-ALLOWED_HOSTS = ['omr-scanner-api.ccstiet.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['api.omr-scanner.ccstiet.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
